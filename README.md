@@ -12,7 +12,7 @@ OPTIONAL: The robot will be able to send data back (either constantly or on dema
 
 ## Success criteria
 
-Pressing the arrow keys or WASD should move the robot in the correct direction. The commands should also have less than 200ms latency.
+Pressing the arrow keys or WASD should move the robot in the correct direction. The commands should also have less than 50ms latency.
 
 ## Test Method
 

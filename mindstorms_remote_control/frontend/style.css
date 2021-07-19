@@ -1,5 +1,6 @@
 * {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+        'Lucida Sans', Arial, sans-serif;
 }
 
 h1 {
@@ -12,4 +13,8 @@ h2 {
 
 p {
     font-size: 16px;
+}
+
+input {
+    margin-top: 10px;
 }

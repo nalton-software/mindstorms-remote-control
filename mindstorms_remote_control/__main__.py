@@ -4,18 +4,18 @@ from enum import Enum
 
 import eventlet
 import socketio
-import argon2
 
-from portable_tank_drive import PortableTankDrive
+from .portable_tank_drive import PortableTankDrive
 
 PORT = 5000
-PASSWORD_HASH = '$argon2id$v=19$m=102400,t=2,p=8$3/kyOZiC9W/TCMhh85c/kQ$k2unzIv3VeIHyHlhpBTojA'
 MAX_SPEED_PERCENT = 50
 
+
 working_dir = os.path.dirname(os.path.abspath(__file__))
-password_hasher = argon2.PasswordHasher()
 keys_down = []
 tank_drive = PortableTankDrive(PortableTankDrive.OUTPUT_B, PortableTankDrive.OUTPUT_C)
+
+password = input("Choose password needed by clients to use (leave blank for none): ")
 
 def get_key_down(key: str):
     '''Mini helper to check if a key is down'''
@@ -67,40 +67,34 @@ app = socketio.WSGIApp(sio, static_files={
 })
 
 @sio.event
-def connect(sid, environ):
-    print('connect ', sid)
+def connect(sid, environ, auth: str):
+    '''
+    Client will connect like this, where password is the password:
+    socket = io.connect('', {
+        auth: password,
+    });
+    '''
+    if auth != password:
+        print("dis")
+        sio.emit('invalid_password')
+        sio.disconnect(sid)
+        return
 
 @sio.event
 def keydown(sid, data: str):
     '''
-    Expected JSON:
-    {password: 'some string', key: 'ArrowUp'}
+    Expected data to be a string representing a keycode.
     '''
-    data = json.loads(data)
-    try:
-        if password_hasher.verify(PASSWORD_HASH, data['password']):
-            set_key_down(data['key'], True)
-            update_motors()
-    except (argon2.exceptions.InvalidHash, argon2.exceptions.VerifyMismatchError):
-        sio.emit('invalid_password')
+    set_key_down(data, True)
+    update_motors()
 
 @sio.event
 def keyup(sid, data: str):
     '''
-    Expected JSON:
-    {password: 'some string', key: 'ArrowUp'}
+    Expected data to be a string representing a keycode.
     '''
-    data = json.loads(data)
-    try:
-        if password_hasher.verify(PASSWORD_HASH, data['password']):
-            set_key_down(data['key'], False)
-            update_motors()
-    except (argon2.exceptions.InvalidHash, argon2.exceptions.VerifyMismatchError):
-        sio.emit('invalid_password')
-
-@sio.event
-def disconnect(sid):
-    print('disconnect ', sid)
+    set_key_down(data, False)
+    update_motors()
 
 if __name__ == '__main__':
     eventlet.wsgi.server(eventlet.listen(('', PORT)), app)

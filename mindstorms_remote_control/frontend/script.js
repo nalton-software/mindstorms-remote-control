@@ -1,34 +1,39 @@
 const passwordInput = document.getElementById('passwordInput');
 const activatedCheckbox = document.getElementById('activatedCheckbox');
-var socket = io();
+const statusText = document.getElementById('statusText');
 
-function emitJson(socket, event, object) {
-    socket.emit(event, JSON.stringify(object));
+const pressedKeys = {};
+let socket;
+
+function connect() {
+    statusText.textContent = 'Connecting...';
+
+    socket = io.connect('', {
+        auth: passwordInput.value,
+    });
+
+    socket.on('connect', () => {
+        statusText.textContent = 'Connected! Press arrow keys to move it!';
+
+        window.addEventListener('keydown', (event) => {
+            const isRepeating = Boolean(pressedKeys[event.keyCode]);
+            if (isRepeating) return;
+            pressedKeys[event.keyCode] = true;
+
+            if (activatedCheckbox.checked) {
+                socket.emit('keydown', event.key);
+            }
+        });
+
+        window.addEventListener('keyup', (event) => {
+            pressedKeys[event.keyCode] = false;
+            if (activatedCheckbox.checked) {
+                socket.emit('keyup', event.key);
+            }
+        });
+    });
+
+    socket.on('invalid_password', () => {
+        statusText.textContent = 'Password is incorrect!';
+    });
 }
-
-function tryLogin() {
-    socket = io()
-}
-
-var pressedKeys = [];
-
-window.addEventListener('keydown', (event) => {
-    var isRepeating = !!pressedKeys[event.keyCode];
-    if (isRepeating) return;
-    pressedKeys[event.keyCode] = true;
-
-    if (activatedCheckbox.checked) {
-        emitJson(socket, 'keydown', {key : event.key, password : passwordInput.value});
-    }
-});
-
-window.addEventListener('keyup', (event) => {
-    pressedKeys[event.keyCode] = false;
-    if (activatedCheckbox.checked) {
-        emitJson(socket, 'keyup', {key : event.key, password : passwordInput.value});
-    }
-});
-
-socket.on('invalid_password', () => {
-    alert('Password is incorrect');
-});

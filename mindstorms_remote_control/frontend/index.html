@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Mindstorms Remote Control</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="style.css" />
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.js"></script>
     </head>
     <body>
         <h1>Mindstorms Remote Control</h1>
-        <p>Control a mindstorms robot through the browser</p>
-        <br>
-        <input id="passwordInput" placeholder="password">
-        <br>
-        <br>
+        <p>Control a mindstorms robot through the browser.</p>
+
         <label for="activatedCheckbox">Activated</label>
-        <input type="checkbox" id="activatedCheckbox">
+        <input type="checkbox" id="activatedCheckbox" />
+        <br />
+
+        <input type="password" id="passwordInput" placeholder="password" />
+        <button onclick="connect()">Connect</button>
+
+        <p id="statusText">Disconnected</p>
     </body>
-    
+
     <script src="script.js"></script>
 </html>
