@@ -1,7 +1,7 @@
 import eventlet
 import socketio
 
-PORT = 5000
+PORT = 80
 
 sio = socketio.Server()
 app = socketio.WSGIApp(sio, static_files={
