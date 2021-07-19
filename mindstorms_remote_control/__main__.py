@@ -1,13 +1,14 @@
 import eventlet
 import socketio
+import os
 
 PORT = 80
 
+working_dir = os.path.dirname(os.path.abspath(__file__))
+
 sio = socketio.Server()
 app = socketio.WSGIApp(sio, static_files={
-    '/': {'content_type': 'text/html', 'filename': 'frontend/index.html'},
-    '/script.js': {'content_type': 'application/javascript', 'filename': 'frontend/script.js'},
-    '/style.css': {'content_type': 'text/css', 'filename': 'frontend/style.css'},
+    '/': f'{working_dir}/frontend/'
 })
 
 @sio.event
