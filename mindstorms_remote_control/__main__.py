@@ -1,6 +1,4 @@
 import os
-import json
-from enum import Enum
 
 import eventlet
 import socketio
@@ -9,7 +7,6 @@ from .portable_tank_drive import PortableTankDrive
 
 PORT = 5000
 MAX_SPEED_PERCENT = 50
-
 
 working_dir = os.path.dirname(os.path.abspath(__file__))
 keys_down = []
@@ -59,7 +56,7 @@ def update_motors():
         l_speed_percent *= multiplier
         r_speed_percent *= multiplier
 
-    tank_drive.on(l_speed_percent, r_speed_percent)
+    tank_drive.on(int(l_speed_percent), int(r_speed_percent))
 
 sio = socketio.Server()
 app = socketio.WSGIApp(sio, static_files={
@@ -74,7 +71,7 @@ def connect(sid, environ, auth: str):
         auth: password,
     });
     '''
-    if auth != password:
+    if password != "" and auth != password:
         print("dis")
         sio.emit('invalid_password')
         sio.disconnect(sid)

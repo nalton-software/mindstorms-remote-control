@@ -35,8 +35,8 @@ class PortableTankDrive:
             }
             self.tank_drive = MoveTank(lookup[self.left_motor_name],
                 lookup[self.right_motor_name])
-    def on(self, l_speed_percent: int, r_speed_percent: int):
 
+    def on(self, l_speed_percent: int, r_speed_percent: int):
         if imported_ev3_libraries:
             self.tank_drive.on(SpeedPercent(l_speed_percent),
                 SpeedPercent(r_speed_percent))
