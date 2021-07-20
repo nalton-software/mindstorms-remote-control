@@ -1,4 +1,5 @@
 import os
+import json
 
 import eventlet
 import socketio
@@ -72,14 +73,22 @@ def connect(sid, environ, auth: str):
     });
     '''
     if password != "" and auth != password:
-        print("dis")
         sio.emit('invalid_password')
         sio.disconnect(sid)
-        return
+
+@sio.event
+def tank_steer(sid, data: str):
+    '''
+    Expects data to be JSON like this:
+    {l_speed_percent: <int>, r_speed_percnet: <int>}
+    '''
+
+    data = json.loads(data)
+    tank_drive.on(data['l_speed_percent'], data['r_speed_percent'])
 
 @sio.event
 def keydown(sid, data: str):
-    '''
+    '''depr
     Expected data to be a string representing a keycode.
     '''
     set_key_down(data, True)
@@ -87,7 +96,7 @@ def keydown(sid, data: str):
 
 @sio.event
 def keyup(sid, data: str):
-    '''
+    '''depr
     Expected data to be a string representing a keycode.
     '''
     set_key_down(data, False)

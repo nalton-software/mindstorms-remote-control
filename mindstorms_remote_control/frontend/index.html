@@ -11,15 +11,18 @@
     <body>
         <h1>Mindstorms Remote Control</h1>
         <p>Control a mindstorms robot through the browser.</p>
+        
+        <div id="loginDiv" class="screen">
+            <input type="password" id="passwordInput" placeholder="password" />
+            <button onclick="connect()">Connect</button>
+            <p id="statusText">Disconnected</p>
+        </div>
 
-        <label for="activatedCheckbox">Activated</label>
-        <input type="checkbox" id="activatedCheckbox" />
-        <br />
-
-        <input type="password" id="passwordInput" placeholder="password" />
-        <button onclick="connect()">Connect</button>
-
-        <p id="statusText">Disconnected</p>
+        <div id="controlDiv" class="screen">
+            <p>You are controlling the robot.</p>
+            <label for="activatedCheckbox">Activated</label>
+            <input type="checkbox" id="activatedCheckbox" />
+        </div>
     </body>
 
     <script src="script.js"></script>
