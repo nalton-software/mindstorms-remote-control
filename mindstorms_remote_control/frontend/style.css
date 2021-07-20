@@ -4,10 +4,12 @@
 }
 
 h1 {
+    margin: 0px;
     font-size: 38px;
 }
 
 h2 {
+    margin: 0px;
     font-size: 24px;
 }
 
@@ -19,7 +21,36 @@ input {
     margin-top: 10px;
 }
 
-.screen {
-    border: 4px solid black;
-    border-style: groove;
+body, html {
+    padding: 0px;
+    margin: 0px;
+    background-color: #f6f6f6;
+}
+
+#topBar {
+    margin: 0px;
+    padding: 10px;
+    padding-left: 30px;
+    background-color: #27b133;
+    display: block;
+}
+
+#mainTable {
+    margin: auto;
+    margin-top: 50px;
+    width: 90%;
+    background-color: white;
+    border-collapse: collapse;
+    border: 2px solid black;
+}
+    
+#mainTable td {
+    vertical-align: top;
+    padding: 5px;
+    border-collapse: collapse;
+    border: 2px solid black;
+}
+
+#controlArea {
+    height: 40vh;
 }

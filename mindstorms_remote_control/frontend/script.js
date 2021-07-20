@@ -1,85 +1,59 @@
-const loginDiv = document.getElementById('loginDiv');
-const controlDiv = document.getElementById('controlDiv');
-
-const passwordInput = document.getElementById('passwordInput');
 const activatedCheckbox = document.getElementById('activatedCheckbox');
-const statusText = document.getElementById('statusText');
+const controlArea = document.getElementById('controlArea');
 
-controlDiv.style.display = 'none';
-let socket;
+const keysDown = {};
+var maxSpeedPercent = 50;
 
-function connect() {
-    statusText.textContent = 'Connecting...';
+function calcMotorSpeeds() {
+    var lSpeedPercent = 0;
+    var rSpeedPercent = 0;
 
-    socket = io.connect('', {
-        auth: passwordInput.value,
-    });
-
-    socket.on('connect', () => {
-        loginDiv.style.display = 'none';
-        controlDiv.style.display = 'block';
-        main();
-    });
-
-    socket.on('invalid_password', () => {
-        statusText.textContent = 'Password is incorrect!';
-    });
-}
-
-function main() {
-    const keysDown = {};
-    var maxSpeedPercent = 50;
-
-    function calcMotorSpeeds() {
-        var lSpeedPercent = 0;
-        var rSpeedPercent = 0;
-
-        if (keysDown.ArrowUp) {
-            lSpeedPercent += maxSpeedPercent;
-            rSpeedPercent += maxSpeedPercent;
-        }
-        if (keysDown.ArrowDown) {
-            lSpeedPercent -= maxSpeedPercent;
-            rSpeedPercent -= maxSpeedPercent;
-        }
-        if (keysDown.ArrowLeft) {
-            lSpeedPercent -= maxSpeedPercent;
-            rSpeedPercent += maxSpeedPercent;
-        }
-        if (keysDown.ArrowRight) {
-            lSpeedPercent += maxSpeedPercent;
-            rSpeedPercent -= maxSpeedPercent;
-        }
-
-        // Cap percentages to max speed
-        if (lSpeedPercent > maxSpeedPercent) {
-            var multiplier = maxSpeedPercent / lSpeedPercent;
-            lSpeedPercent *= multiplier;
-            rSpeedPercent *= multiplier;
-        }
-        else if (rSpeedPercent > maxSpeedPercent) {
-            var multiplier = maxSpeedPercent / rSpeedPercent;
-            lSpeedPercent *= multiplier;
-            rSpeedPercent *= multiplier;
-        }
-
-        return {l_speed_percent: lSpeedPercent, r_speed_percent: rSpeedPercent};
+    if (keysDown.ArrowUp) {
+        lSpeedPercent += maxSpeedPercent;
+        rSpeedPercent += maxSpeedPercent;
+    }
+    if (keysDown.ArrowDown) {
+        lSpeedPercent -= maxSpeedPercent;
+        rSpeedPercent -= maxSpeedPercent;
+    }
+    if (keysDown.ArrowLeft) {
+        lSpeedPercent -= maxSpeedPercent;
+        rSpeedPercent += maxSpeedPercent;
+    }
+    if (keysDown.ArrowRight) {
+        lSpeedPercent += maxSpeedPercent;
+        rSpeedPercent -= maxSpeedPercent;
     }
 
-    window.addEventListener('keydown', (event) => {
+    // Cap percentages to max speed
+    if (lSpeedPercent > maxSpeedPercent) {
+        var multiplier = maxSpeedPercent / lSpeedPercent;
+        lSpeedPercent *= multiplier;
+        rSpeedPercent *= multiplier;
+    } else if (rSpeedPercent > maxSpeedPercent) {
+        var multiplier = maxSpeedPercent / rSpeedPercent;
+        lSpeedPercent *= multiplier;
+        rSpeedPercent *= multiplier;
+    }
+
+    return {l_speed_percent: lSpeedPercent, r_speed_percent: rSpeedPercent};
+}
+
+new LoginArea((socket) => {
+    document.addEventListener('keydown', (event) => {
         const isRepeating = Boolean(keysDown[event.code]);
         if (isRepeating) return;
         keysDown[event.code] = true;
 
         if (activatedCheckbox.checked) {
-            socket.emit('tank_steer', calcMotorSpeeds());
+            socket.emit('tank_steer', JSON.stringify(calcMotorSpeeds()));
         }
     });
 
-    window.addEventListener('keyup', (event) => {
+    document.addEventListener('keyup', (event) => {
         keysDown[event.code] = false;
         if (activatedCheckbox.checked) {
-            socket.emit('tank_steer', calcMotorSpeeds());
+            socket.emit('tank_steer', JSON.stringify(calcMotorSpeeds()));
         }
     });
-}
+});

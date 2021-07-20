@@ -9,21 +9,26 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.js"></script>
     </head>
     <body>
-        <h1>Mindstorms Remote Control</h1>
-        <p>Control a mindstorms robot through the browser.</p>
+        <div id="topBar">
+            <h1>Mindstorms Remote Control</h1>
+            <p>Control a mindstorms robot through the browser.</p>
+        </div>
         
-        <div id="loginDiv" class="screen">
-            <input type="password" id="passwordInput" placeholder="password" />
-            <button onclick="connect()">Connect</button>
-            <p id="statusText">Disconnected</p>
-        </div>
-
-        <div id="controlDiv" class="screen">
-            <p>You are controlling the robot.</p>
-            <label for="activatedCheckbox">Activated</label>
-            <input type="checkbox" id="activatedCheckbox" />
-        </div>
+        <table id="mainTable">
+            <tr>
+                <td id="loginArea"></td>
+            </tr>
+            <tr>
+                <td id="controlArea">
+                    <p>Make the robot move using the arrow keys</p>
+                    <p>
+                    <label for="activatedCheckbox">Activated</label>
+                    <input type="checkbox" id="activatedCheckbox" checked="true"/>
+                </td>
+            </tr>
+        </table>
     </body>
 
+    <script src="LoginArea.js"></script>
     <script src="script.js"></script>
 </html>
