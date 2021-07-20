@@ -10,6 +10,8 @@ try:
 except:
     pass
 
+from .ports import Ports
+
 class PortableTankDrive:
     '''
     A wrapper to ev3dev.motors.MoveTank.
@@ -17,21 +19,16 @@ class PortableTankDrive:
     Useful for running the program on computers other than EV3.
     '''
 
-    OUTPUT_A = 'OUTPUT_A'
-    OUTPUT_B = 'OUTPUT_B'
-    OUTPUT_C = 'OUTPUT_C'
-    OUTPUT_D = 'OUTPUT_D'
-
     def __init__(self, left_motor_name: str, right_motor_name: str):
         self.left_motor_name = left_motor_name
         self.right_motor_name = right_motor_name
 
         if imported_ev3_libraries:
             lookup = {
-                self.OUTPUT_A : OUTPUT_A,
-                self.OUTPUT_B : OUTPUT_B,
-                self.OUTPUT_C : OUTPUT_C,
-                self.OUTPUT_D : OUTPUT_D,
+                self.OUTPUT_A : Ports.OUTPUT_A,
+                self.OUTPUT_B : Ports.OUTPUT_B,
+                self.OUTPUT_C : Ports.OUTPUT_C,
+                self.OUTPUT_D : Ports.OUTPUT_D,
             }
             self.tank_drive = MoveTank(lookup[self.left_motor_name],
                 lookup[self.right_motor_name])
