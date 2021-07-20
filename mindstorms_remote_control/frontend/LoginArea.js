@@ -35,6 +35,6 @@ class LoginArea {
 
         this.socket.on('connect_failed', () => {
             this.statusText.textContent = "Failed to connect to server!";
-        })
+        });
     }
 }
