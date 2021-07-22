@@ -13,6 +13,11 @@ except:
 from .ports import Ports
 
 class PortableMediumMotor:
+    '''
+    A wrapper to ev3dev.motors.MediumMotor
+    If ev3dev is not available then it pretends to move the motors but does nothing.
+    Useful for running the program on computers other than EV3.
+    '''
     def __init__(self, motor_name):
         self.motor_name = motor_name
 

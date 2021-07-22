@@ -1,11 +1,5 @@
 class LoginArea {
     constructor(onLoginFunc) {
-        this.parentElem = document.getElementById('loginArea');
-        this.parentElem.innerHTML = `
-            <input type="password" id="passwordInput" placeholder="password" />
-            <button id="loginButton">Connect</button>
-            <p id="statusText">Disconnected</p>`;
-
         this.passwordInput = document.getElementById('passwordInput');
         this.passwordInput.onkeypress = (event) => {
             if (event.code == "Enter") this.login()
@@ -34,7 +28,7 @@ class LoginArea {
         });
 
         this.socket.on('connect_failed', () => {
-            this.statusText.textContent = "Failed to connect to server!";
+            this.statusText.textContent = 'Failed to connect to server!';
         });
     }
 }

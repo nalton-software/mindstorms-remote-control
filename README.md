@@ -2,6 +2,14 @@
 
 Remote controlling an EV3 robot through a web app.
 
+## Usage intstructions
+
+(from the directory containing `README.md`)
+```sh
+sudo -H pip3 install -r requirements.txt
+python3 -m mindstorms_remote_control
+```
+
 ## Goal
 
 The robot will be able to be controlled remotely on a website.

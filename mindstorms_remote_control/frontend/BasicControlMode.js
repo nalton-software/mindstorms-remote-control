@@ -8,7 +8,9 @@ class BasicControlMode extends ControlMode {
             mediumMotor: 10
         };
 
-        this.activatedCheckbox = document.getElementById('activatedCheckbox');
+        this.sensorPanel = new SensorPanel(this.div);
+
+        this.activatedCheckbox = document.getElementById('activatedCheckbox');;
     }
 
     calcTankSteering() {
@@ -51,7 +53,7 @@ class BasicControlMode extends ControlMode {
         if (this.keysDown.ShiftLeft) {
             speed += this.maxSpeeds.mediumMotor;
         }
-        if (this.keysDown.CtrlLeft) {
+        if (this.keysDown.ControlLeft) {
             speed -= this.maxSpeeds.mediumMotor;
         }
         return speed;
@@ -75,6 +77,11 @@ class BasicControlMode extends ControlMode {
                 this.socket.emit('tank_steer', this.calcTankSteering());
                 this.socket.emit('medium_motor_drive', this.calcMediumMotorSpeed());
             }
+        })
+
+        this.addSocketListener('sensor_data', data => {
+            console.log(data)
+            this.sensorPanel.display(new SensorInfo(data.ultrasonic_dist));
         });
     }
 }
