@@ -11,7 +11,7 @@ class BasicControlMode extends ControlMode {
 
         this.sensorPanel = new SensorPanel(this.div);
 
-        this.activatedCheckbox = document.getElementById('activatedCheckbox');;
+        this.activatedCheckbox = document.getElementById('basicControlActivatedCheckbox');;
     }
 
     calcTankSteering() {

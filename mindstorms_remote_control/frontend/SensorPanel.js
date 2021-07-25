@@ -18,12 +18,12 @@ class SensorPanel {
         this.div = document.createElement('div');
         this.parentElement.appendChild(this.div);
 
-        this.ultrasonicOutput = document.createElement('p');
-        this.div.appendChild(this.ultrasonicOutput);
+        this.output = document.createElement('p');
+        this.div.appendChild(this.output);
     }
 
     display(sensorInfo) {
-        this.ultrasonicOutput.innerText =
+        this.output.innerText =
 `Ultrasonic sensor distance: ${sensorInfo.ultrasonicDist}cm
 Ambient light intensity: ${sensorInfo.ambientLight}%
 Reflected light intensity: ${sensorInfo.reflectedLight}%

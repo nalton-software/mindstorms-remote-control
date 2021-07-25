@@ -2,6 +2,8 @@ class MouseControlMode extends ControlMode {
     constructor() {
         super('MouseControlMode', 'mouseControls');
 
+        this.activatedOutput = document.getElementById('mouseControlActivatedOutput');
+
         this.activated = false;
 
         this.maxForwardSpeed = 100;
@@ -34,6 +36,8 @@ class MouseControlMode extends ControlMode {
         this.addEventListener(window, 'keypress', event => {
             if (event.key == ' ') {
                 this.activated = ! this.activated;
+                this.activatedOutput.innerText = this.activated ?
+                    'Activated' : 'Deactivated';
             }
         });
         this.addEventListener(document, 'mousemove', event => {
