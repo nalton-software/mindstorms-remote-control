@@ -7,7 +7,7 @@ class BasicControlMode extends ControlMode {
             tankSteer: 50,
             mediumMotor: 10
         };
-        this.getSensorDataInterval = 50;
+        this.getSensorDataInterval = 250;
 
         this.sensorPanel = new SensorPanel(this.div);
 
