@@ -4,7 +4,7 @@ import time
 import threading
 
 import socketio
-from aiohttp import web
+from flask import *
 
 from .ports import Ports
 from .portable_tank_drive import PortableTankDrive
@@ -23,14 +23,11 @@ ultrasonic_sensor = PortableUltrasonicSensor(Ports.INPUT_3)
 password = input("Choose password needed by clients to use (leave blank for none): ")
 
 working_dir = os.path.dirname(os.path.abspath(__file__))
-sio = socketio.AsyncServer(async_mode='aiohttp')
-app = web.Application()
-app.add_routes([web.static('/', f'{working_dir}/frontend')])
-sio.attach(app)
-runner = web.AppRunner(app)
-await runner.setup()
-site = web.TCPSite(runner, 'localhost', 8080)
-await site.start()
+sio = socketio.Server(async_mode='threading')
+app = Flask(__name__)
+app.wsgi_app = socketio.WSGIApp(sio, static_files={
+    '/': f'{working_dir}/frontend/'
+})
 
 @sio.event
 def connect(sid, environ, auth: str):
@@ -67,4 +64,5 @@ def send_sensor_data_loop():
         time.sleep(SEND_SENSOR_DATA_INTERVAL)
 
 if __name__ == '__main__':
-    web.run_app(app, port=PORT)
+    threading.Thread(target=send_sensor_data_loop, daemon=True).start()
+    app.run()
