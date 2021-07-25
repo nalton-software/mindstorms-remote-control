@@ -1,31 +1,31 @@
 import os
 import json
 import time
-import threading
 
 import socketio
-from flask import *
+import eventlet
 
 from .ports import Ports
 from .portable_tank_drive import PortableTankDrive
 from .portable_medium_motor import PortableMediumMotor
 from .portable_ultrasonic_sensor import PortableUltrasonicSensor
-from .portable_ultrasonic_sensor import PortableUltrasonicSensor
+from .portable_color_sensor import PortableColorSensor
+from .portable_touch_sensor import PortableTouchSensor
 
 PORT = 5000
 MAX_SPEED_PERCENT = 50
-SEND_SENSOR_DATA_INTERVAL = 1 # seconds, as is standard in python
 
 tank_drive = PortableTankDrive(Ports.OUTPUT_B, Ports.OUTPUT_C)
 medium_motor = PortableMediumMotor(Ports.OUTPUT_A)
 ultrasonic_sensor = PortableUltrasonicSensor(Ports.INPUT_3)
+color_sensor = PortableColorSensor(Ports.INPUT_1)
+touch_sensor = PortableTouchSensor(Ports.INPUT_2)
 
 password = input("Choose password needed by clients to use (leave blank for none): ")
 
 working_dir = os.path.dirname(os.path.abspath(__file__))
-sio = socketio.Server(async_mode='threading')
-app = Flask(__name__)
-app.wsgi_app = socketio.WSGIApp(sio, static_files={
+sio = socketio.Server()
+app = socketio.WSGIApp(sio, static_files={
     '/': f'{working_dir}/frontend/'
 })
 
@@ -55,14 +55,14 @@ def medium_motor_drive(sid, data):
     '''
     medium_motor.on(data)
 
-def send_sensor_data_loop():
-    while True:
-        print(ultrasonic_sensor.distance_cm())
-        sio.emit('sensor_data', {
-            'ultrasonic_dist' : ultrasonic_sensor.distance_cm()
-        })
-        time.sleep(SEND_SENSOR_DATA_INTERVAL)
+@sio.event
+def get_sensor_data(sid, data):
+    sio.emit('sensor_data', {
+        'ultrasonic_dist' : ultrasonic_sensor.distance_cm(),
+        'reflected_light' : color_sensor.reflected_light(),
+        'ambient_light' : color_sensor.ambient_light(),
+        'touch_sensor_pressed' : touch_sensor.is_pressed()
+    })
 
 if __name__ == '__main__':
-    threading.Thread(target=send_sensor_data_loop, daemon=True).start()
-    app.run()
+    eventlet.wsgi.server(eventlet.listen(('', PORT)), app)

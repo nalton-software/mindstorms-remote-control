@@ -7,6 +7,7 @@ class BasicControlMode extends ControlMode {
             tankSteer: 50,
             mediumMotor: 10
         };
+        this.getSensorDataInterval = 50;
 
         this.sensorPanel = new SensorPanel(this.div);
 
@@ -77,11 +78,18 @@ class BasicControlMode extends ControlMode {
                 this.socket.emit('tank_steer', this.calcTankSteering());
                 this.socket.emit('medium_motor_drive', this.calcMediumMotorSpeed());
             }
-        })
+        });
+
+        this.setInterval(() => {
+            this.socket.emit('get_sensor_data', {});
+        }, this.getSensorDataInterval);
 
         this.addSocketListener('sensor_data', data => {
-            console.log(data)
-            this.sensorPanel.display(new SensorInfo(data.ultrasonic_dist));
+            this.sensorPanel.display(new SensorInfo(
+                data.ultrasonic_dist,
+                data.ambient_light,
+                data.reflected_light,
+                data.touch_sensor_pressed));
         });
     }
 }

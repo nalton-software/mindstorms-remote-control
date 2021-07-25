@@ -28,10 +28,22 @@ class SocketListener {
     }
 }
 
+// Same as EventListener but the equivalent of setInterval
+class Interval {
+    constructor(callback, interval) {
+        this.interval = setInterval(callback, interval);
+    }
+
+    destroy() {
+        clearInterval(this.interval);
+    }
+}
+
+
 class ControlMode {
     constructor(name, divId) {
         this.name = name;
-        this.listeners = [];
+        this.toDestroy = [];
         this.div = document.getElementById(divId);
     }
 
@@ -43,12 +55,17 @@ class ControlMode {
         // Create an event listener that is removed when the
         // ControlMode is deactivated
         const listener = new EventListener(element, eventName, callback)
-        this.listeners.push(listener);
+        this.toDestroy.push(listener);
     }
 
     addSocketListener(event, callback) {
         const listener = new SocketListener(this.socket, event, callback)
-        this.listeners.push(listener);
+        this.toDestroy.push(listener);
+    }
+
+    setInterval(callback, interval) {
+        const intervalObj = new Interval(callback, interval);
+        this.toDestroy.push(intervalObj);
     }
 
     activate() {
@@ -63,7 +80,7 @@ class ControlMode {
     deactivate() {
         this.div.style.display = 'none';
         this.onDeactivated();
-        this.listeners.forEach(l => {
+        this.toDestroy.forEach(l => {
             l.destroy();
         });
     }

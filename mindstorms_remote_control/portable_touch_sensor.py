@@ -2,7 +2,7 @@
 imported_ev3_libraries = False
 try:
     from ev3dev2.sensor import INPUT_1, INPUT_2, INPUT_3, INPUT_4
-    from ev3dev2.sensor.lego import UltrasonicSensor
+    from ev3dev2.sensor.lego import TouchSensor
     imported_ev3_libraries = True
 except:
     pass
@@ -11,9 +11,9 @@ import random
 
 from .ports import Ports
 
-class PortableUltrasonicSensor:
+class PortableTouchSensor:
     '''
-    A wrapper to ev3dev.sensor.lego.UltrasonicSensor
+    A wrapper to ev3dev.sensor.lego.TouchSensor
     If ev3dev is not available then it pretends to read the sensor but does nothing.
     Useful for running the program on computers other than EV3.
     '''
@@ -27,13 +27,13 @@ class PortableUltrasonicSensor:
                 Ports.INPUT_3 : INPUT_3,
                 Ports.INPUT_4 : INPUT_4,
             }
-            self.sensor = UltrasonicSensor(lookup[self.port_name])
+            self.sensor = TouchSensor(lookup[self.port_name])
 
-    def distance_cm(self, value_if_dummy: int = None) -> int:
+    def is_pressed(self, value_if_dummy: bool = None) -> bool:
         if imported_ev3_libraries:
             return self.sensor.distance_centimetres
         else:
             if value_if_dummy is not None:
                 return value_if_dummy
             else:
-                return random.randint(0, 100)
+                return bool(random.getrandbits(1))
