@@ -29,16 +29,24 @@ class SocketListener {
 }
 
 // Same as EventListener but the equivalent of setInterval
-class Interval {
-    constructor(callback, interval) {
-        this.interval = setInterval(callback, interval);
+// Also can have duration varied
+class VariableInterval {
+    constructor(callback, duration) {
+        this.callback = callback;
+        this.duration = duration;
+
+        this.timeoutCallback();
     }
 
+    timeoutCallback() {
+        this.callback(this);
+        this.timeout = setTimeout(this.timeoutCallback.bind(this), this.duration)
+    }
+    
     destroy() {
-        clearInterval(this.interval);
+        clearTimeout(this.timeout);
     }
-}
-
+} 
 
 class ControlMode {
     constructor(name, divId) {
@@ -56,16 +64,28 @@ class ControlMode {
         // ControlMode is deactivated
         const listener = new EventListener(element, eventName, callback)
         this.toDestroy.push(listener);
+        return listener;
     }
 
     addSocketListener(event, callback) {
         const listener = new SocketListener(this.socket, event, callback)
         this.toDestroy.push(listener);
+        return listener;
     }
 
-    setInterval(callback, interval) {
-        const intervalObj = new Interval(callback, interval);
-        this.toDestroy.push(intervalObj);
+    setInterval(callback, duration) {
+        const interval = new VariableInterval(callback, duration);
+        this.toDestroy.push(interval);
+        return interval;
+    }
+
+    getElementById(elemId) {
+        // Get an element contained in this div by elemId
+        // Note that this only works for one level of nesting
+
+        var elem = document.getElementById(elemId);
+        var parent = elem ? elem.parentNode : {};
+        return (parent.id && parent.id === this.div.id) ? elem : {};
     }
 
     activate() {

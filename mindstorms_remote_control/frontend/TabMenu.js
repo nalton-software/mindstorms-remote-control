@@ -26,7 +26,7 @@ class TabMenu {
             tab.deactivate();
         });
 
-        var clickedButton = (event.target) ? event.target : event.srcElement;
+        const clickedButton = event.target || event.srcElement;
         this.tabs[clickedButton.tabName].activate();
     }
 }

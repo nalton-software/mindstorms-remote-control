@@ -44,7 +44,7 @@ def connect(sid, environ, auth: str):
 def tank_steer(sid, data):
     '''
     Expects data to be object like this:
-    {l_speed_percent: <int>, r_speed_percnet: <int>}
+    {l_speed_percent: <int>, r_speed_percent: <int>}
     '''
     tank_drive.on(data['l_speed_percent'], data['r_speed_percent'])
 
@@ -56,13 +56,13 @@ def medium_motor_drive(sid, data):
     medium_motor.on(data)
 
 @sio.event
-def get_sensor_data(sid, data):
+def get_sensor_data(sid):
     sio.emit('sensor_data', {
         'ultrasonic_dist' : ultrasonic_sensor.distance_cm(),
         'reflected_light' : color_sensor.reflected_light(),
         'ambient_light' : color_sensor.ambient_light(),
         'touch_sensor_pressed' : touch_sensor.is_pressed()
-    })
+    }, room=sid)
 
 if __name__ == '__main__':
     eventlet.wsgi.server(eventlet.listen(('', PORT)), app)

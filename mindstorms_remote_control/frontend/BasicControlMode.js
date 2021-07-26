@@ -3,45 +3,46 @@ class BasicControlMode extends ControlMode {
         super('Basic', 'basicControls');
 
         this.keysDown = {};
-        this.maxSpeeds = {
-            tankSteer: 50,
-            mediumMotor: 10
-        };
-        this.getSensorDataInterval = 250;
 
         this.sensorPanel = new SensorPanel(this.div);
 
-        this.activatedCheckbox = document.getElementById('basicControlActivatedCheckbox');;
+        this.activatedCheckbox = this.getElementById('activatedCheckbox');
+        this.speedSliders = {
+            tankSteer: this.getElementById('tankSteerSlider'),
+            mediumMotor: this.getElementById('mediumMotorSlider'),
+        };
     }
 
     calcTankSteering() {
         var lSpeedPercent = 0;
         var rSpeedPercent = 0;
 
+        var tankSteerSpeed = Number(this.speedSliders.tankSteer.value);
+
         if (this.keysDown.ArrowUp) {
-            lSpeedPercent += this.maxSpeeds.tankSteer;
-            rSpeedPercent += this.maxSpeeds.tankSteer;
+            lSpeedPercent += tankSteerSpeed;
+            rSpeedPercent += tankSteerSpeed;
         }
         if (this.keysDown.ArrowDown) {
-            lSpeedPercent -= this.maxSpeeds.tankSteer;
-            rSpeedPercent -= this.maxSpeeds.tankSteer;
+            lSpeedPercent -= tankSteerSpeed;
+            rSpeedPercent -= tankSteerSpeed;
         }
         if (this.keysDown.ArrowLeft) {
-            lSpeedPercent -= this.maxSpeeds.tankSteer;
-            rSpeedPercent += this.maxSpeeds.tankSteer;
+            lSpeedPercent -= tankSteerSpeed;
+            rSpeedPercent += tankSteerSpeed;
         }
         if (this.keysDown.ArrowRight) {
-            lSpeedPercent += this.maxSpeeds.tankSteer;
-            rSpeedPercent -= this.maxSpeeds.tankSteer;
+            lSpeedPercent += tankSteerSpeed;
+            rSpeedPercent -= tankSteerSpeed;
         }
 
         // Cap percentages to max speed
-        if (lSpeedPercent > this.maxSpeeds.tankSteer) {
-            var multiplier = this.maxSpeeds.tankSteer / lSpeedPercent;
+        if (lSpeedPercent > tankSteerSpeed) {
+            var multiplier = tankSteerSpeed / lSpeedPercent;
             lSpeedPercent *= multiplier;
             rSpeedPercent *= multiplier;
-        } else if (rSpeedPercent > this.maxSpeeds.tankSteer) {
-            var multiplier = this.maxSpeeds.tankSteer / rSpeedPercent;
+        } else if (rSpeedPercent > tankSteerSpeed) {
+            var multiplier = tankSteerSpeed / rSpeedPercent;
             lSpeedPercent *= multiplier;
             rSpeedPercent *= multiplier;
         }
@@ -52,10 +53,10 @@ class BasicControlMode extends ControlMode {
     calcMediumMotorSpeed() {
         var speed = 0;
         if (this.keysDown.ShiftLeft) {
-            speed += this.maxSpeeds.mediumMotor;
+            speed += Number(this.speedSliders.mediumMotor.value);
         }
         if (this.keysDown.ControlLeft) {
-            speed -= this.maxSpeeds.mediumMotor;
+            speed -= Number(this.speedSliders.mediumMotor.value);
         }
         return speed;
     }
@@ -80,16 +81,14 @@ class BasicControlMode extends ControlMode {
             }
         });
 
-        this.setInterval(() => {
-            this.socket.emit('get_sensor_data', {});
+        this.setInterval(intervalObj => {
+            if (this.activatedCheckbox.checked) this.socket.emit('get_sensor_data');
+                
+            intervalObj.duration = this.sensorPanel.pollingRate;
         }, this.getSensorDataInterval);
 
         this.addSocketListener('sensor_data', data => {
-            this.sensorPanel.display(new SensorInfo(
-                data.ultrasonic_dist,
-                data.ambient_light,
-                data.reflected_light,
-                data.touch_sensor_pressed));
+            this.sensorPanel.display(new SensorInfo(data));
         });
     }
 }

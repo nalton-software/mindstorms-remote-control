@@ -1,4 +1,4 @@
-* {
+body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
         'Lucida Sans', Arial, sans-serif;
 }
@@ -19,6 +19,10 @@ p, input, button {
 
 input {
     margin-top: 10px;
+}
+
+input[type=range] {
+    vertical-align: middle;
 }
 
 body, html {
@@ -52,7 +56,7 @@ body, html {
 }
 
 #controlArea {
-    height: 40vh;
+    height: fit-content;
     display: none;
 }
 

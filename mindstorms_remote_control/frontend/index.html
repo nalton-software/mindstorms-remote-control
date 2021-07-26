@@ -28,16 +28,41 @@
                         <label>Set control mode:</label>
                     </div>
                     <div id="basicControls" class="controlMode">
-                        <p>Move the robot using the arrow keys</p>
-                        <p>Move the front motor using shift/ctrl</p>
                         <br>
-                        <label for="basicControlActivatedCheckbox">Activated</label>
-                        <input type="checkbox" id="basicControlActivatedCheckbox" checked="true"/>
+                        <label>Move the robot using the arrow keys.
+                            Move the front motor using shift/ctrl.</label>
+                        <br>
+                        <label for="activatedCheckbox">Activated</label>
+                        <input type="checkbox" id="activatedCheckbox"/>
+                        <br>
+
+                        <label for="tankSteerSlider">Speed of tank steer motor: </label>
+                        <input type="range" id="tankSteerSlider" min="0" max="100" value="50" onchange="this.nextElementSibling.innerText = this.value">
+                        <span>50</span>
+                        <br>
+
+                        <label for="mediumMotorSlider">Speed of medium motor: </label>
+                        <input type="range" id="mediumMotorSlider" min="0" max="100" value="10" onchange="this.nextElementSibling.innerText = this.value">
+                        <span>10</span>
                     </div>
                     <div id="mouseControls" class="controlMode">
-                        <p>Move the mouse around in this area to control the robot</p>
-                        <p>Press space to toggle activation</p>
-                        <p id="mouseControlActivatedOutput">Deactivated</p>
+                        <br>
+                        <label>Move the mouse around in this area to control the robot.
+                            Press space to toggle activation.</label>
+                        <br>
+                        <label id="activatedOutput">Deactivated</label>
+                        <br>
+
+                        <label for="speedSlider">Maxiumum speed: </label>
+                        <input type="range" id="speedSlider" min="0" max="100" value="50" onchange="this.nextElementSibling.innerText = this.value">
+                        <span>50</span>
+                        <br>
+
+                        <label for="turnAmountSlider">Maxiumum turn amount: </label>
+                        <input type="range" id="turnAmountSlider" min="0" max="100" value="50" onchange="this.nextElementSibling.innerText = this.value">
+                        <span>50</span>
+                        <br>
+
                     </div>
                 </td>
             </tr>

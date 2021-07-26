@@ -1,3 +1,2 @@
 python-socketio
 eventlet
-argon2-cffi
