@@ -12,7 +12,8 @@ from .ports import Ports
 class PortableTouchSensor:
     '''
     A wrapper to ev3dev.sensor.lego.TouchSensor
-    If ev3dev is not available then it pretends to read the sensor but does nothing.
+    If ev3dev is not available or the there is no sensor plugged in 
+    then it pretends to read the sensor but does nothing.
     Useful for running the program on computers other than EV3.
     '''
     def __init__(self, port_name: str):

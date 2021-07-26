@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-imported_ev3_libraries = False
 try:
     from ev3dev2.sensor.lego import ColorSensor
-    imported_ev3_libraries = True
 except:
     pass
 
@@ -14,7 +12,8 @@ from .ports import Ports
 class PortableColorSensor:
     '''
     A wrapper to ev3dev.sensor.lego.ColorSensor
-    If ev3dev is not available then it pretends to read the sensor but does nothing.
+    If ev3dev is not available or the there is no sensor plugged in 
+    then it pretends to read the sensor but does nothing.
     Useful for running the program on computers other than EV3.
     '''
     def __init__(self, port_name: str):

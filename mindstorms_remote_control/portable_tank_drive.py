@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-imported_ev3_libraries = False
 try:
     from ev3dev2.motor import SpeedPercent, MoveTank
-    imported_ev3_libraries = True
 except:
     pass
 
