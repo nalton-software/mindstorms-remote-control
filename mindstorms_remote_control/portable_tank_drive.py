@@ -2,11 +2,7 @@
 
 imported_ev3_libraries = False
 try:
-    from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_B, \
-        OUTPUT_C, OUTPUT_D, SpeedPercent, MoveTank
-    from ev3dev2.sensor import INPUT_1
-    from ev3dev2.sensor.lego import TouchSensor
-    from ev3dev2.led import Leds
+    from ev3dev2.motor import SpeedPercent, MoveTank
     imported_ev3_libraries = True
 except:
     pass
@@ -24,19 +20,16 @@ class PortableTankDrive:
         self.left_motor_name = left_motor_name
         self.right_motor_name = right_motor_name
 
-        if imported_ev3_libraries:
-            lookup = {
-                self.OUTPUT_A : Ports.OUTPUT_A,
-                self.OUTPUT_B : Ports.OUTPUT_B,
-                self.OUTPUT_C : Ports.OUTPUT_C,
-                self.OUTPUT_D : Ports.OUTPUT_D,
-            }
-            self.tank_drive = MoveTank(lookup[self.left_motor_name],
-                lookup[self.right_motor_name])
+        try:
+            self.motor = MoveTank(left_motor_name, right_motor_name)
+        except:
+            if not Ports.simulated:
+                print(f"Failed to create TankDrive on {left_motor_name} and {right_motor_name}.")
+            self.motor = None
 
     def on(self, l_speed_percent: int, r_speed_percent: int):
-        if imported_ev3_libraries:
-            self.tank_drive.on(SpeedPercent(l_speed_percent),
+        if self.motor is not None:
+            self.motor.on(SpeedPercent(l_speed_percent),
                 SpeedPercent(r_speed_percent))
         else:
             print(f'[forever] {self.left_motor_name}: {l_speed_percent}, '+
@@ -45,8 +38,8 @@ class PortableTankDrive:
     def on_for_degrees(self, l_speed_percent: int, r_speed_percent: int,
         degrees: float):
 
-        if imported_ev3_libraries:
-            self.tank_drive.on_for_rotations(SpeedPercent(l_speed_percent),
+        if self.motor is not None:
+            self.motor.on_for_rotations(SpeedPercent(l_speed_percent),
                 SpeedPercent(r_speed_percent), degrees)
         else:
             print(f'[{degrees} degrees] {self.left_motor_name}: {l_speed_percent}, '+
@@ -55,8 +48,8 @@ class PortableTankDrive:
     def on_for_rotations(self, l_speed_percent: int, r_speed_percent: int,
         rotations: float):
 
-        if imported_ev3_libraries:
-            self.tank_drive.on_for_rotations(SpeedPercent(l_speed_percent),
+        if self.motor is not None:
+            self.motor.on_for_rotations(SpeedPercent(l_speed_percent),
                 SpeedPercent(r_speed_percent), rotations)
         else:
             print(f'[{rotations} rotations] {self.left_motor_name}: {l_speed_percent}, '+
@@ -65,8 +58,8 @@ class PortableTankDrive:
     def on_for_seconds(self, l_speed_percent: int, r_speed_percent: int,
         seconds: float):
 
-        if imported_ev3_libraries:
-            self.tank_drive.on_for_rotations(SpeedPercent(l_speed_percent),
+        if self.motor is not None:
+            self.motor.on_for_rotations(SpeedPercent(l_speed_percent),
                 SpeedPercent(r_speed_percent), seconds)
         else:
             print(f'[{seconds} seconds] {self.left_motor_name}: {l_speed_percent}, '+

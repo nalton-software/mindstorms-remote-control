@@ -10,6 +10,13 @@ sudo -H pip3 install -r requirements.txt
 python3 -m mindstorms_remote_control
 ```
 
+Use emulator:
+
+```sh
+sudo -H pip3 install ev3dev2simulator
+ev3dev2simulator -t custom_robot_world.yaml
+```
+
 ## Goal
 
 The robot will be able to be controlled remotely on a website.

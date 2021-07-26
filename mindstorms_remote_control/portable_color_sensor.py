@@ -2,7 +2,6 @@
 
 imported_ev3_libraries = False
 try:
-    from ev3dev2.sensor import INPUT_1, INPUT_2, INPUT_3, INPUT_4
     from ev3dev2.sensor.lego import ColorSensor
     imported_ev3_libraries = True
 except:
@@ -18,20 +17,18 @@ class PortableColorSensor:
     If ev3dev is not available then it pretends to read the sensor but does nothing.
     Useful for running the program on computers other than EV3.
     '''
-    def __init__(self, port_name):
+    def __init__(self, port_name: str):
         self.port_name = port_name
 
-        if imported_ev3_libraries:
-            lookup = {
-                Ports.INPUT_1 : INPUT_1,
-                Ports.INPUT_2 : INPUT_2,
-                Ports.INPUT_3 : INPUT_3,
-                Ports.INPUT_4 : INPUT_4,
-            }
-            self.sensor = ColorSensor(lookup[self.port_name])
+        try:
+            self.sensor = ColorSensor(self.port_name)
+        except:
+            if not Ports.simulated:
+                print(f"Failed to create ColorSensor on {self.port_name}.")
+            self.sensor = None
 
     def ambient_light(self, value_if_dummy: int = None) -> int:
-        if imported_ev3_libraries:
+        if self.sensor is not None:
             return self.sensor.ambient_light_intensity
         else:
             if value_if_dummy is not None:
@@ -40,7 +37,7 @@ class PortableColorSensor:
                 return random.randint(0, 100)
 
     def reflected_light(self, value_if_dummy: int = None) -> int:
-        if imported_ev3_libraries:
+        if self.sensor is not None:
             return self.sensor.reflected_light_intensity
         else:
             if value_if_dummy is not None:

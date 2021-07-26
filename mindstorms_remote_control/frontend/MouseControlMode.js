@@ -33,27 +33,27 @@ class MouseControlMode extends ControlMode {
             rSpeedPercent *= multiplier;
         }
 
-        return {l_speed_percent: lSpeedPercent, r_speed_percent: rSpeedPercent};
+        return { l_speed_percent: lSpeedPercent, r_speed_percent: rSpeedPercent };
     }
 
     onActivated() {
-        this.addEventListener(window, 'keypress', event => {
+        this.addEventListener(window, 'keypress', (event) => {
             if (event.key == ' ') {
-                this.activated = ! this.activated;
-                this.activatedOutput.innerText = this.activated ?
-                    'Activated' : 'Deactivated';
+                this.activated = !this.activated;
+                this.activatedOutput.innerText = this.activated ? 'Activated' : 'Deactivated';
             }
         });
-        
-        this.addEventListener(document, 'mousemove', event => {
+
+        this.addEventListener(document, 'mousemove', (event) => {
             if (this.activated) {
+                // TODO: simulator shows it seems to be reversed?
                 var rect = this.div.getBoundingClientRect();
                 var posX = event.x - rect.left;
-                var xProportion = posX / this.div.clientWidth * 2 - 1;
+                var xProportion = (posX / this.div.clientWidth) * 2 - 1;
                 var turnFactor = Math.min(1, Math.max(xProportion, -1));
 
                 var posY = event.y - rect.top;
-                var yProportion = posY / this.div.clientHeight * 2 - 1;
+                var yProportion = (posY / this.div.clientHeight) * 2 - 1;
                 yProportion = Math.min(1, Math.max(yProportion, -1));
                 var maxForwardSpeed = this.sliders.speed.value;
                 var forwardSpeed = yProportion * maxForwardSpeed * -1;
@@ -62,14 +62,13 @@ class MouseControlMode extends ControlMode {
             }
         });
 
-        this.setInterval(intervalObj => {
-            if (this.activated) 
-                this.socket.emit('get_sensor_data');
-                
+        this.setInterval((intervalObj) => {
+            if (this.activated) this.socket.emit('get_sensor_data');
+
             intervalObj.duration = this.sensorPanel.pollingRate;
         }, this.sensorPanel.pollingRate);
 
-        this.addSocketListener('sensor_data', data => {
+        this.addSocketListener('sensor_data', (data) => {
             this.sensorPanel.display(new SensorInfo(data));
         });
     }

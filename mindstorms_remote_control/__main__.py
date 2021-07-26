@@ -1,7 +1,4 @@
 import os
-import json
-import time
-
 import socketio
 import eventlet
 
@@ -13,13 +10,12 @@ from .portable_color_sensor import PortableColorSensor
 from .portable_touch_sensor import PortableTouchSensor
 
 PORT = 5000
-MAX_SPEED_PERCENT = 50
 
-tank_drive = PortableTankDrive(Ports.OUTPUT_B, Ports.OUTPUT_C)
-medium_motor = PortableMediumMotor(Ports.OUTPUT_A)
+tank_drive = PortableTankDrive(Ports.OUTPUT_A, Ports.OUTPUT_D)
+medium_motor = PortableMediumMotor(Ports.OUTPUT_B)
+color_sensor = PortableColorSensor(Ports.INPUT_2)
+touch_sensor = PortableTouchSensor(Ports.INPUT_4)
 ultrasonic_sensor = PortableUltrasonicSensor(Ports.INPUT_3)
-color_sensor = PortableColorSensor(Ports.INPUT_1)
-touch_sensor = PortableTouchSensor(Ports.INPUT_2)
 
 password = input("Choose password needed by clients to use (leave blank for none): ")
 
