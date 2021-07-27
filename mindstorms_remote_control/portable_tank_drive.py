@@ -10,7 +10,8 @@ from .ports import Ports
 class PortableTankDrive:
     '''
     A wrapper to ev3dev.motors.MoveTank.
-    If ev3dev is not available then it pretends to move the motors but does nothing.
+    If ev3dev is not available or the there is no motor plugged in 
+    then it pretends to move the motors but does nothing.
     Useful for running the program on computers other than EV3.
     '''
 

@@ -17,8 +17,7 @@ class BasicControlMode extends ControlMode {
         var lSpeedPercent = 0;
         var rSpeedPercent = 0;
 
-        var tankSteerSpeed = Number(this.speedSliders.tankSteer.value);
-
+        const tankSteerSpeed = Number(this.speedSliders.tankSteer.value);
         if (this.keysDown.ArrowUp) {
             lSpeedPercent += tankSteerSpeed;
             rSpeedPercent += tankSteerSpeed;
@@ -38,16 +37,16 @@ class BasicControlMode extends ControlMode {
 
         // Cap percentages to max speed
         if (lSpeedPercent > tankSteerSpeed) {
-            var multiplier = tankSteerSpeed / lSpeedPercent;
+            const multiplier = tankSteerSpeed / lSpeedPercent;
             lSpeedPercent *= multiplier;
             rSpeedPercent *= multiplier;
         } else if (rSpeedPercent > tankSteerSpeed) {
-            var multiplier = tankSteerSpeed / rSpeedPercent;
+            const multiplier = tankSteerSpeed / rSpeedPercent;
             lSpeedPercent *= multiplier;
             rSpeedPercent *= multiplier;
         }
 
-        return {l_speed_percent: lSpeedPercent, r_speed_percent: rSpeedPercent};
+        return { l_speed_percent: lSpeedPercent, r_speed_percent: rSpeedPercent };
     }
 
     calcMediumMotorSpeed() {
@@ -63,16 +62,16 @@ class BasicControlMode extends ControlMode {
 
     onActivated() {
         this.addEventListener(window, 'keydown', (event) => {
-            const isRepeating = Boolean(this.keysDown[event.code]);
-            if (isRepeating) return;
+            const isPressed = Boolean(this.keysDown[event.code]);
+            if (isPressed) return;
             this.keysDown[event.code] = true;
-    
+
             if (this.activatedCheckbox.checked) {
                 this.socket.emit('tank_steer', this.calcTankSteering());
                 this.socket.emit('medium_motor_drive', this.calcMediumMotorSpeed());
             }
         });
-    
+
         this.addEventListener(window, 'keyup', (event) => {
             this.keysDown[event.code] = false;
             if (this.activatedCheckbox.checked) {
@@ -81,13 +80,13 @@ class BasicControlMode extends ControlMode {
             }
         });
 
-        this.setInterval(intervalObj => {
+        this.setInterval((intervalObj) => {
             if (this.activatedCheckbox.checked) this.socket.emit('get_sensor_data');
-                
+
             intervalObj.duration = this.sensorPanel.pollingRate;
         }, this.getSensorDataInterval);
 
-        this.addSocketListener('sensor_data', data => {
+        this.addSocketListener('sensor_data', (data) => {
             this.sensorPanel.display(new SensorInfo(data));
         });
     }

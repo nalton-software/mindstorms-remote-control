@@ -11,7 +11,7 @@ class TabMenu {
         this.tabs = tabs;
 
         Object.keys(this.tabs).forEach(tabName => {
-            var element = document.createElement('button');
+            const element = document.createElement('button');
             element.textContent = tabName;
             element.onclick = this.onTabClick.bind(this);
             element.classList.add(this.tabClassName);

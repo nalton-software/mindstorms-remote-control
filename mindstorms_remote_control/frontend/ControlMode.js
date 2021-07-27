@@ -1,4 +1,4 @@
-// A class similar to a regular event listener but 
+// A class similar to a regular event listener but
 // optimised for easy removal, to allow switching between
 // different program modes.
 class EventListener {
@@ -40,13 +40,13 @@ class VariableInterval {
 
     timeoutCallback() {
         this.callback(this);
-        this.timeout = setTimeout(this.timeoutCallback.bind(this), this.duration)
+        this.timeout = setTimeout(this.timeoutCallback.bind(this), this.duration);
     }
-    
+
     destroy() {
         clearTimeout(this.timeout);
     }
-} 
+}
 
 class ControlMode {
     constructor(name, divId) {
@@ -62,13 +62,13 @@ class ControlMode {
     addEventListener(element, eventName, callback) {
         // Create an event listener that is removed when the
         // ControlMode is deactivated
-        const listener = new EventListener(element, eventName, callback)
+        const listener = new EventListener(element, eventName, callback);
         this.toDestroy.push(listener);
         return listener;
     }
 
     addSocketListener(event, callback) {
-        const listener = new SocketListener(this.socket, event, callback)
+        const listener = new SocketListener(this.socket, event, callback);
         this.toDestroy.push(listener);
         return listener;
     }
@@ -85,7 +85,7 @@ class ControlMode {
 
         var elem = document.getElementById(elemId);
         var parent = elem ? elem.parentNode : {};
-        return (parent.id && parent.id === this.div.id) ? elem : {};
+        return parent.id && parent.id === this.div.id ? elem : {};
     }
 
     activate() {
@@ -98,9 +98,11 @@ class ControlMode {
     }
 
     deactivate() {
+        // reset movement
+        this.socket.emit('tank_steer', { l_speed_percent: 0, r_speed_percent: 0 });
         this.div.style.display = 'none';
         this.onDeactivated();
-        this.toDestroy.forEach(l => {
+        this.toDestroy.forEach((l) => {
             l.destroy();
         });
     }
