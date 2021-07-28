@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
+
+imported_ev3_libraries = False
+
 try:
     from ev3dev2.sensor.lego import UltrasonicSensor
+    imported_ev3_libraries = True
 except:
     pass
 
@@ -18,16 +22,17 @@ class PortableUltrasonicSensor:
     def __init__(self, port_name: str):
         self.port_name = port_name
 
-        try:
-            self.sensor = UltrasonicSensor(port_name)
-        except:
-            if not Ports.simulated:
-                print(f"Failed to create UltrasonicSensor on {self.port_name}.")
-            self.sensor = None
+        if imported_ev3_libraries:
+            try:
+                self.ev3_sensor = UltrasonicSensor(port_name)
+            except:
+                print(f'Failed to create UltrasonicSensor on {self.port_name}.')
+        else:
+            self.ev3_sensor = None
 
     def distance_cm(self, value_if_dummy: int = None) -> int:
-        if self.sensor is not None:
-            return self.sensor.distance_centimeters
+        if self.ev3_sensor is not None:
+            return self.ev3_sensor.distance_centimeters
         else:
             if value_if_dummy is not None:
                 return value_if_dummy

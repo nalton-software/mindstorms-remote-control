@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
+imported_ev3_libraries = False
+
 try:
     from ev3dev2.sensor.lego import TouchSensor
+    imported_ev3_libraries = True
 except:
     pass
 
@@ -19,16 +22,17 @@ class PortableTouchSensor:
     def __init__(self, port_name: str):
         self.port_name = port_name
 
-        try:
-            self.sensor = TouchSensor(self.port_name)
-        except:
-            if not Ports.simulated:
-                print(f"Failed to create TouchSensor on {self.port_name}.")
-            self.sensor = None
+        if imported_ev3_libraries:
+            try:
+                self.ev3_sensor = TouchSensor(self.port_name)
+            except:
+                print(f'Failed to create TouchSensor on {self.port_name}.')
+        else:
+            self.ev3_sensor = None
 
     def is_pressed(self, value_if_dummy: bool = None) -> bool:
-        if self.sensor is not None:
-            return bool(self.sensor.is_pressed)
+        if self.ev3_sensor is not None:
+            return bool(self.ev3_sensor.is_pressed)
         else:
             if value_if_dummy is not None:
                 return value_if_dummy

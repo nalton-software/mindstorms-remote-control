@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
+imported_ev3_libraries = False
+
 try:
     from ev3dev2.motor import MediumMotor, SpeedPercent
+    imported_ev3_libraries = True
 except:
     pass
 
@@ -15,36 +18,37 @@ class PortableMediumMotor:
     Useful for running the program on computers other than EV3.
     '''
     def __init__(self, motor_name: str):
-        self.motor_name = motor_name
+        self.ev3_motor_name = motor_name
 
-        try:
-            self.motor = MediumMotor(self.motor_name)
-        except:
-            if not Ports.simulated:
-                print(f"Failed to create MediumMotor on {self.motor_name}.")
-            self.motor = None
+        if imported_ev3_libraries:
+            try:
+                self.ev3_motor = MediumMotor(self.ev3_motor_name)
+            except:
+                print(f'Failed to create MediumMotor on port {self.ev3_motor_name}')
+        else:
+            self.ev3_motor = None
 
     def on(self, speed_percent: int):
-        if self.motor is not None:
-            self.motor.on(SpeedPercent(speed_percent))
+        if self.ev3_motor is not None:
+            self.ev3_motor.on(SpeedPercent(speed_percent))
         else:
-            print(f'[forever] {self.motor_name}: {speed_percent}')
+            print(f'[forever] {self.ev3_motor_name}: {speed_percent}')
                 
     def on_for_degrees(self, speed_percent: int, degrees: float):
-        if self.motor is not None:
-            self.motor.on_for_degrees(SpeedPercent(speed_percent), degrees)
+        if self.ev3_motor is not None:
+            self.ev3_motor.on_for_degrees(SpeedPercent(speed_percent), degrees)
         else:
-            print(f'[{degrees} degrees] {self.motor_name}: {speed_percent}')
+            print(f'[{degrees} degrees] {self.ev3_motor_name}: {speed_percent}')
                 
     def on_for_rotations(self, speed_percent: int, rotations: float):
-        if self.motor is not None:
-            self.motor.on_for_rotations(SpeedPercent(speed_percent), rotations)
+        if self.ev3_motor is not None:
+            self.ev3_motor.on_for_rotations(SpeedPercent(speed_percent), rotations)
         else:
-            print(f'[{rotations} rotations] {self.motor_name}: {speed_percent}')
+            print(f'[{rotations} rotations] {self.ev3_motor_name}: {speed_percent}')
                 
     def on_for_seconds(self, speed_percent: int, seconds: float):
-        if self.motor is not None:
-            self.motor.on_for_seconds(SpeedPercent(speed_percent), seconds)
+        if self.ev3_motor is not None:
+            self.ev3_motor.on_for_seconds(SpeedPercent(speed_percent), seconds)
         else:
-            print(f'[{seconds} seconds] {self.motor_name}: {speed_percent}')
+            print(f'[{seconds} seconds] {self.ev3_motor_name}: {speed_percent}')
                 

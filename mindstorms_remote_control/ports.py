@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
+from enum import Enum
 
 imported_ev3_libraries = False
+
 try:
     import ev3dev2.auto as ev3
     imported_ev3_libraries = True
 except:
     pass
 
-class Ports():
+class Ports:
     simulated = not imported_ev3_libraries
     OUTPUT_A = ev3.OUTPUT_A if imported_ev3_libraries else 'OUTPUT_A'
     OUTPUT_B = ev3.OUTPUT_B if imported_ev3_libraries else 'OUTPUT_B'

@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
+imported_ev3_libraries = False
+
 try:
     from ev3dev2.sensor.lego import ColorSensor
+    imported_ev3_libraries = True
 except:
     pass
 
@@ -19,16 +22,17 @@ class PortableColorSensor:
     def __init__(self, port_name: str):
         self.port_name = port_name
 
-        try:
-            self.sensor = ColorSensor(self.port_name)
-        except:
-            if not Ports.simulated:
-                print(f"Failed to create ColorSensor on {self.port_name}.")
-            self.sensor = None
+        if imported_ev3_libraries:
+            try:
+                self.ev3_sensor = ColorSensor(self.port_name)
+            except:
+                print(f'Failed to create ColorSensor on {self.port_name}.')
+        else:
+            self.ev3_sensor = None
 
     def ambient_light(self, value_if_dummy: int = None) -> int:
-        if self.sensor is not None:
-            return self.sensor.ambient_light_intensity
+        if self.ev3_sensor is not None:
+            return self.ev3_sensor.ambient_light_intensity
         else:
             if value_if_dummy is not None:
                 return value_if_dummy
@@ -36,8 +40,8 @@ class PortableColorSensor:
                 return random.randint(0, 100)
 
     def reflected_light(self, value_if_dummy: int = None) -> int:
-        if self.sensor is not None:
-            return self.sensor.reflected_light_intensity
+        if self.ev3_sensor is not None:
+            return self.ev3_sensor.reflected_light_intensity
         else:
             if value_if_dummy is not None:
                 return value_if_dummy
