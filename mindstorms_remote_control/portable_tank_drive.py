@@ -26,8 +26,8 @@ class PortableTankDrive:
             try:
                 self.ev3_motor = MoveTank(left_motor_name, right_motor_name)
             except:
-                print(f'Failed to create TankDrive on ' + 
-                    f'{left_motor_name} and {right_motor_name}.')
+                print('Failed to create TankDrive on ' + 
+                    '{} and {}.'.format(left_motor_name, right_motor_name))
         else:
             self.ev3_motor = None
 
@@ -36,8 +36,8 @@ class PortableTankDrive:
             self.ev3_motor.on(SpeedPercent(l_speed_percent),
                 SpeedPercent(r_speed_percent))
         else:
-            print(f'[forever] {self.left_motor_name}: {l_speed_percent}, '+
-                f'{self.right_motor_name}: {r_speed_percent}')
+            print('[forever] {}: {}, '.format(self.left_motor_name, l_speed_percent)+
+                '{}: {}'.format(self.right_motor_name, r_speed_percent))
                 
     def on_for_degrees(self, l_speed_percent: int, r_speed_percent: int,
         degrees: float):
@@ -46,8 +46,8 @@ class PortableTankDrive:
             self.ev3_motor.on_for_rotations(SpeedPercent(l_speed_percent),
                 SpeedPercent(r_speed_percent), degrees)
         else:
-            print(f'[{degrees} degrees] {self.left_motor_name}: {l_speed_percent}, '+
-                f'{self.right_motor_name}: {r_speed_percent}')
+            print('[{} degrees] {}: {}, '.format(degrees, self.left_motor_name, l_speed_percent)+
+                '{}: {}'.format(self.right_motor_name, r_speed_percent))
     
     def on_for_rotations(self, l_speed_percent: int, r_speed_percent: int,
         rotations: float):
@@ -56,8 +56,8 @@ class PortableTankDrive:
             self.ev3_motor.on_for_rotations(SpeedPercent(l_speed_percent),
                 SpeedPercent(r_speed_percent), rotations)
         else:
-            print(f'[{rotations} rotations] {self.left_motor_name}: {l_speed_percent}, '+
-                f'{self.right_motor_name}: {r_speed_percent}')
+            print('[{} rotations] {}: {}, '.format(rotations, self.left_motor_name, l_speed_percent)+
+                '{}: {}'.format(self.right_motor_name, r_speed_percent))
     
     def on_for_seconds(self, l_speed_percent: int, r_speed_percent: int,
         seconds: float):
@@ -66,5 +66,5 @@ class PortableTankDrive:
             self.ev3_motor.on_for_rotations(SpeedPercent(l_speed_percent),
                 SpeedPercent(r_speed_percent), seconds)
         else:
-            print(f'[{seconds} seconds] {self.left_motor_name}: {l_speed_percent}, '+
-                f'{self.right_motor_name}: {r_speed_percent}')
+            print('[{} seconds] {}: {}, '.format(seconds, self.left_motor_name, l_speed_percent)+
+                '{}: {}'.format(self.right_motor_name, r_speed_percent))

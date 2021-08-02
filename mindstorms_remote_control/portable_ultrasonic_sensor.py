@@ -26,7 +26,7 @@ class PortableUltrasonicSensor:
             try:
                 self.ev3_sensor = UltrasonicSensor(port_name)
             except:
-                print(f'Failed to create UltrasonicSensor on {self.port_name}.')
+                print('Failed to create UltrasonicSensor on {}.'.format(self.port_name))
         else:
             self.ev3_sensor = None
 

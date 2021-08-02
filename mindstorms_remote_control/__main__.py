@@ -22,7 +22,7 @@ password = input("Choose password needed by clients to use (leave blank for none
 working_dir = os.path.dirname(os.path.abspath(__file__))
 sio = socketio.Server()
 app = socketio.WSGIApp(sio, static_files={
-    '/': f'{working_dir}/frontend/'
+    '/': '{}/frontend/'.format(working_dir)
 })
 
 @sio.event

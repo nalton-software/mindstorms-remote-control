@@ -26,7 +26,7 @@ class PortableColorSensor:
             try:
                 self.ev3_sensor = ColorSensor(self.port_name)
             except:
-                print(f'Failed to create ColorSensor on {self.port_name}.')
+                print('Failed to create ColorSensor on {}.'.format(self.port_name))
         else:
             self.ev3_sensor = None
 

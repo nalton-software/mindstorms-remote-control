@@ -26,7 +26,7 @@ class PortableTouchSensor:
             try:
                 self.ev3_sensor = TouchSensor(self.port_name)
             except:
-                print(f'Failed to create TouchSensor on {self.port_name}.')
+                print('Failed to create TouchSensor on {}.'.format(self.port_name))
         else:
             self.ev3_sensor = None
 
