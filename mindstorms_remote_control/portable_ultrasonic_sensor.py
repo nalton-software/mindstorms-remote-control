@@ -17,12 +17,12 @@ class PortableUltrasonicSensor:
     A wrapper to ev3dev.sensor.lego.UltrasonicSensor
     If ev3dev is not available or the there is no sensor plugged in 
     then it pretends to read the sensor but does nothing.
-    Useful for running the program on computers other than EV3.
+    Useful for running the program without an EV3 or having all the ports plugged in.
     '''
     def __init__(self, port_name: str):
         self.port_name = port_name
 
-        if imported_ev3_libraries:
+        if not Ports.simulated:
             try:
                 self.ev3_sensor = UltrasonicSensor(port_name)
             except:

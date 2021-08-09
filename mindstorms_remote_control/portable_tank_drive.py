@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 
-imported_ev3_libraries = False
-
 try:
     from ev3dev2.motor import SpeedPercent, MoveTank
-    imported_ev3_libraries = False
 except:
     pass
 
@@ -15,14 +12,13 @@ class PortableTankDrive:
     A wrapper to ev3dev.motors.MoveTank.
     If ev3dev is not available or the there is no motor plugged in 
     then it pretends to move the motors but does nothing.
-    Useful for running the program on computers other than EV3.
+    Useful for running the program without an EV3 or having all the ports plugged in.
     '''
-
     def __init__(self, left_motor_name: str, right_motor_name: str):
         self.left_motor_name = left_motor_name
         self.right_motor_name = right_motor_name
 
-        if imported_ev3_libraries:
+        if not Ports.simulated:
             try:
                 self.ev3_motor = MoveTank(left_motor_name, right_motor_name)
             except:

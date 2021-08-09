@@ -60,7 +60,7 @@ class MouseControlMode extends ControlMode {
                 const maxForwardSpeed = Number(this.sliders.speed.value);
                 const forwardSpeed = proportionY * maxForwardSpeed * -1;
 
-                this.socket.emit('tank_steer', this.calcTankSteering(forwardSpeed, turnFactor * -1));
+                this.socket.emit('tank_steer', this.calcTankSteering(forwardSpeed, turnFactor));
             }
         });
 
