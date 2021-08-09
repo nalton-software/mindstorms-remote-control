@@ -18,6 +18,34 @@ sudo -H pip3 install ev3dev2simulator
 ev3dev2simulator -t custom_robot_world.yaml
 ```
 
+NOTE: The following instructions do not seem to work. Do not follow them, they're only there for reference.
+
+To run it inside an actual ev3, you should build an ev3dev image and flash that instead.
+
+First get docker and brickstrap:
+
+Ubuntu:
+
+```sh
+sudo add-apt-repository ppa:ev3dev/tools
+sudo apt update
+sudo apt install brickstrap docker qemu-user-static
+```
+
+Arch Linux (from the AUR):
+
+```sh
+yay -S docker brickstrap qemu-user-static
+```
+
+Build the docker image then use brickstrap to build the sd card image:
+
+```sh
+docker build -t mindstorms-remote-control .
+brickstrap create-tar mindstorms-remote-control ./mrc.tar
+brickstrap create-image ./mrc.tar ./mindstorms-remote-control.img
+```
+
 ## Goal
 
 The robot will be able to be controlled remotely on a website.
