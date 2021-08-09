@@ -7,15 +7,16 @@ Remote controlling an EV3 robot through a web app.
 (from the directory containing `README.md`)
 
 ```sh
-sudo -H pip3 install -r requirements.txt
-python3 -m mindstorms_remote_control
+sudo pip3 install -r requirements.txt # install dependencies
+python3 -m mindstorms_remote_control # run program
 ```
 
-Use emulator:
+Use the emulator: (Note: Ambient light sensor will read null because the emulator doesn't support that)
 
 ```sh
-sudo -H pip3 install ev3dev2simulator
-ev3dev2simulator -t custom_robot_world.yaml
+sudo pip3 install ev3dev2simulator
+ev3dev2simulator -t custom_robot_world.yaml # run this in seperate terminal
+python3 -m mindstorms_remote_control # run program
 ```
 
 ## Goal

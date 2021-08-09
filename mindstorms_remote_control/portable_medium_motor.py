@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 
-imported_ev3_libraries = False
-
 try:
     from ev3dev2.motor import MediumMotor, SpeedPercent
-    imported_ev3_libraries = True
 except:
     pass
 
@@ -15,12 +12,12 @@ class PortableMediumMotor:
     A wrapper to ev3dev.motors.MediumMotor
     If ev3dev is not available or the there is no motor plugged in 
     then it pretends to move the motors but does nothing.
-    Useful for running the program on computers other than EV3.
+    Useful for running the program without an EV3 or having all the ports plugged in.
     '''
     def __init__(self, motor_name: str):
         self.ev3_motor_name = motor_name
 
-        if imported_ev3_libraries:
+        if not Ports.simulated:
             try:
                 self.ev3_motor = MediumMotor(self.ev3_motor_name)
             except:
