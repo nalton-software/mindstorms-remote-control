@@ -66,3 +66,7 @@ The sensors should send back their correct data as well.
 We will test this by using all of the keyboard commands and checking that they perform as expected with acceptable latency.
 
 We might also challenge someone to a race or a sumo contest and tests if it can do well.
+
+## Program structure
+
+The program is segregated into two main parts; the frontend website and the backend server. The backend server sets up a socketio server serving the frontend as static html in the `frontend/` folder and waits for the frontend to connect with the socketio server. The frontend will connect with a password (for security) and then will be able to send motor moves commands to the server with minimal latency. Note that the backend only handles motor moves command from the frontend which will do all the motor move calculating from the key presses or mouse moves (control modes). The frontend will also poll the server for sensor data and the server will send it back. 
