@@ -1,10 +1,5 @@
 class LoginArea {
     constructor(onLoginFunc) {
-        this.passwordInput = document.getElementById('passwordInput');
-        this.passwordInput.onkeypress = (event) => {
-            if (event.code == "Enter") this.login()
-        }
-
         this.statusText = document.getElementById('statusText');
         this.loginButton = document.getElementById('loginButton');
         this.loginButton.onclick = () => this.login();
@@ -14,9 +9,7 @@ class LoginArea {
     login() {
         this.statusText.textContent = 'Connecting...';
 
-        this.socket = io.connect('', {
-            auth: this.passwordInput.value,
-        });
+        this.socket = io.connect('');
 
         this.socket.on('connect', () => {
             this.statusText.textContent = 'Logged in';

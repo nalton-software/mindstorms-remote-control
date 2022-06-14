@@ -1,6 +1,7 @@
 import os
+from aiohttp import web
 import socketio
-import eventlet
+from flask import Flask, send_from_directory
 
 from .ports import Ports
 from .portable_tank_drive import PortableTankDrive
@@ -17,26 +18,17 @@ color_sensor = PortableColorSensor(Ports.INPUT_2)
 touch_sensor = PortableTouchSensor(Ports.INPUT_4)
 ultrasonic_sensor = PortableUltrasonicSensor(Ports.INPUT_3)
 
-password = input("Choose password needed by clients to use (leave blank for none): ")
-
 working_dir = os.path.dirname(os.path.abspath(__file__))
-sio = socketio.Server()
-app = socketio.WSGIApp(sio, static_files={
-    '/': '{}/frontend/'.format(working_dir)
-})
+sio = socketio.Server(async_mode='threading')
 
-@sio.event
-def connect(sid, environ, auth: str):
-    '''
-    Client will connect like this, where password is the password:
-    socket = io.connect('', {
-        auth: password,
-    });
-    '''
-    if password != "" and auth != password:
-        sio.disconnect(sid)
+app = Flask(__name__)
+app.wsgi_app = socketio.WSGIApp(sio, app.wsgi_app)
 
-@sio.event
+@app.route('/main/<path:path>')
+def serve_static(path):
+    return send_from_directory('{}/frontend/'.format(working_dir), path)
+
+@sio.on('tank_steer')
 def tank_steer(sid, data):
     '''
     Expects data to be object like this:
@@ -44,14 +36,14 @@ def tank_steer(sid, data):
     '''
     tank_drive.on(data['l_speed_percent'], data['r_speed_percent'])
 
-@sio.event
+@sio.on('medium_motor_drive')
 def medium_motor_drive(sid, data):
     '''
     Expects data to be int
     '''
     medium_motor.on(data)
 
-@sio.event
+@sio.on('get_sensor_data')
 def get_sensor_data(sid):
     sio.emit('sensor_data', {
         'ultrasonic_dist' : ultrasonic_sensor.distance_cm(),
@@ -61,4 +53,4 @@ def get_sensor_data(sid):
     }, room=sid)
 
 if __name__ == '__main__':
-    eventlet.wsgi.server(eventlet.listen(('', PORT)), app)
+    app.run(port=PORT)
